@@ -1,0 +1,58 @@
+[
+  {
+    "id": "T-2023-001",
+    "title": "AI Based Platform for Thesis Topic Registration and Approval",
+    "department": "Computer Science",
+    "year": 2023,
+    "keywords": ["ai", "thesis", "topic registration", "approval workflow"],
+    "abstract": "A web platform that supports registration and approval of thesis topics using simple AI recommendations."
+  },
+  {
+    "id": "T-2023-014",
+    "title": "Duplicate Detection System for Student Research Projects",
+    "department": "Computer Science",
+    "year": 2023,
+    "keywords": ["duplicate detection", "similarity", "student projects", "nlp"],
+    "abstract": "A natural language processing system for detecting duplicate student project proposals."
+  },
+  {
+    "id": "T-2024-006",
+    "title": "Supervisor Assignment Model for Master's Students",
+    "department": "Information Systems",
+    "year": 2024,
+    "keywords": ["supervisor assignment", "capacity planning", "master students"],
+    "abstract": "A recommendation model for assigning supervisors according to research interests and workload."
+  },
+  {
+    "id": "T-2024-019",
+    "title": "Monitoring Completion Progress in Graduate Capstone Projects",
+    "department": "Information Systems",
+    "year": 2024,
+    "keywords": ["progress monitoring", "milestones", "capstone", "risk"],
+    "abstract": "A dashboard for tracking completion progress and milestone risks in capstone projects."
+  },
+  {
+    "id": "T-2025-003",
+    "title": "Multi-Agent Educational Assistant for Course Project Feedback",
+    "department": "Computer Science",
+    "year": 2025,
+    "keywords": ["multi-agent", "educational assistant", "feedback", "course project"],
+    "abstract": "A multi-agent assistant that reviews course project submissions and gives structured feedback."
+  },
+  {
+    "id": "T-2025-011",
+    "title": "Knowledge Graph for University Research Topic Management",
+    "department": "Data Science",
+    "year": 2025,
+    "keywords": ["knowledge graph", "research topics", "university", "semantic search"],
+    "abstract": "A knowledge graph approach to search and manage research topics across university departments."
+  },
+  {
+    "id": "T-2026-002",
+    "title": "Intelligent Platform for Diploma Project Lifecycle Management",
+    "department": "Computer Science",
+    "year": 2026,
+    "keywords": ["intelligent platform", "diploma project", "lifecycle", "monitoring"],
+    "abstract": "An intelligent platform for tracking diploma project stages, deadlines, and progress indicators."
+  }
+]

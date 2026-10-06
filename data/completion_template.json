@@ -1,0 +1,26 @@
+[
+  {
+    "code": "M1",
+    "name": "Topic registration",
+    "week": 4,
+    "expected_artifact": "Approved topic title and short justification"
+  },
+  {
+    "code": "M2",
+    "name": "Architecture and agent specification",
+    "week": 5,
+    "expected_artifact": "Architecture diagram, agent table, message formats"
+  },
+  {
+    "code": "M3",
+    "name": "Working multi-agent system",
+    "week": 10,
+    "expected_artifact": "All agents implemented, logs, error handling, test scenarios"
+  },
+  {
+    "code": "M4",
+    "name": "Final report and defense demo",
+    "week": 15,
+    "expected_artifact": "Final version, report, presentation, defense demo"
+  }
+]

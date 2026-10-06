@@ -1,0 +1,42 @@
+[
+  {
+    "id": "S-001",
+    "name": "Dr. Aigerim Sadykova",
+    "department": "Computer Science",
+    "expertise_keywords": ["multi-agent", "ai", "nlp", "educational technology", "similarity"],
+    "capacity_total": 6,
+    "capacity_used": 4
+  },
+  {
+    "id": "S-002",
+    "name": "Dr. Timur Akhmetov",
+    "department": "Information Systems",
+    "expertise_keywords": ["workflow", "supervisor assignment", "capacity planning", "dashboards"],
+    "capacity_total": 5,
+    "capacity_used": 2
+  },
+  {
+    "id": "S-003",
+    "name": "Dr. Dana Kim",
+    "department": "Data Science",
+    "expertise_keywords": ["knowledge graph", "semantic search", "topic modeling", "recommendation"],
+    "capacity_total": 4,
+    "capacity_used": 3
+  },
+  {
+    "id": "S-004",
+    "name": "Dr. Ruslan Iskakov",
+    "department": "Computer Science",
+    "expertise_keywords": ["software architecture", "monitoring", "testing", "project management"],
+    "capacity_total": 6,
+    "capacity_used": 1
+  },
+  {
+    "id": "S-005",
+    "name": "Dr. Malika Omarova",
+    "department": "Computer Science",
+    "expertise_keywords": ["ai ethics", "academic integrity", "plagiarism detection", "policy compliance"],
+    "capacity_total": 5,
+    "capacity_used": 5
+  }
+]
