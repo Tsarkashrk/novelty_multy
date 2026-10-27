@@ -9,7 +9,10 @@
   "department": "Computer Science",
   "keywords": ["multi-agent", "novelty assessment", "supervisor matching"],
   "current_week": 5,
-  "completed_milestones": ["M1"]
+  "completed_milestones": ["M1"],
+  "archive_source": "openalex",
+  "archive_csv": null,
+  "include_synthetic": false
 }
 ```
 
@@ -42,11 +45,22 @@ Every actual agent or tool call writes one JSONL record and one SQLite `call_eve
   "interpretation": "MEDIUM_NOVELTY",
   "top_matches": [
     {
-      "id": "T-2026-002",
-      "title": "Intelligent Platform for Diploma Project Lifecycle Management",
-      "similarity": 0.43
+      "id": "OA0105",
+      "title": "An integrated software platform for the efficient management of projects",
+      "domain": "Software Engineering Techniques and Practices",
+      "source": "OpenAlex",
+      "url": "https://openalex.org/W2912835758",
+      "is_synthetic": false,
+      "similarity": 0.16
     }
-  ]
+  ],
+  "archive": {
+    "source": "openalex_csv",
+    "file": "openalex_thesis_topics.csv",
+    "records_total": 230,
+    "records_used": 160,
+    "synthetic_excluded": 70
+  }
 }
 ```
 

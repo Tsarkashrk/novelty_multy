@@ -29,6 +29,9 @@ def build_parser() -> argparse.ArgumentParser:
         help="Comma-separated topic keywords.",
     )
     parser.add_argument("--output", help="Optional path for saving the JSON report.")
+    parser.add_argument("--archive-source", choices=("openalex", "sample"), default="openalex", help="Archive used for novelty and duplication checks.")
+    parser.add_argument("--archive-csv", help="Optional path to a compatible CSV archive; overrides --archive-source.")
+    parser.add_argument("--include-synthetic", action="store_true", help="Include controlled synthetic OpenAlex variants.")
     parser.add_argument("--current-week", type=int, default=5, help="Current semester week (1-30).")
     parser.add_argument("--completed", default="", help="Comma-separated completed milestone codes, e.g. M1,M2.")
     parser.add_argument("--max-steps", type=int, default=10, help="Maximum number of agent steps.")
@@ -48,6 +51,9 @@ def request_from_args(args: argparse.Namespace) -> dict[str, Any]:
         "keywords": keywords,
         "current_week": args.current_week,
         "completed_milestones": [item.strip() for item in args.completed.split(",") if item.strip()],
+        "archive_source": args.archive_source,
+        "archive_csv": args.archive_csv,
+        "include_synthetic": args.include_synthetic,
     }
 
 

@@ -7,7 +7,7 @@ The prototype uses an **orchestrator + pipeline** pattern with explicit shared s
 - The orchestrator creates the task, sends JSON messages, records state, and enforces step/time limits and retry policy.
 - Domain agents perform only their own specialized work.
 - Request and result messages are stored in SQLite. Agent and tool call events are stored in SQLite and JSONL.
-- Agents use local tools and datasets: archived project topics, supervisor profiles, and completion milestone templates. The orchestrator and ToolRunner use SQLite for state and call events.
+- Agents use local tools and datasets: the bundled OpenAlex CSV topic archive, supervisor profiles, and completion milestone templates. The orchestrator and ToolRunner use SQLite for state and call events.
 
 ## Architecture Diagram
 
@@ -35,8 +35,9 @@ flowchart TD
 
     O --> R[Final Decision JSON]
 
-    D1[(archive_topics.json)] --> A2
-    D1 --> A3
+    D1[(openalex_thesis_topics.csv)] --> A2
+    A2 -->|similarity evidence| A3
+    D4[(archive_topics.json, optional sample)] --> A2
     D2[(supervisors.json)] --> A4
     D3[(completion_template.json)] --> A5
     DB[(SQLite state.db)] <--> O
@@ -55,7 +56,7 @@ flowchart TD
 
 1. A student submits a topic, department, student name, and optional keywords.
 2. Topic Intake Agent validates the request and produces a normalized topic profile.
-3. Novelty Assessment Agent compares the topic against archived topics and returns a novelty score.
+3. Novelty Assessment Agent loads the CSV archive, excludes synthetic variants by default, and compares the topic against 160 OpenAlex records. It returns a novelty score, archive counts, and source links.
 4. Duplication Control Agent classifies the duplication risk.
 5. Supervisor Matching Agent ranks suitable supervisors.
 6. Completion Cycle Monitor Agent builds a basic milestone plan.

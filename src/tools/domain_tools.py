@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from src.agents.base import AgentError
-from src.tools.text_similarity import blended_similarity, normalize_text, tokenize, topic_to_text
+from src.tools.text_similarity import blended_similarity, tokenize, topic_to_text
 
 
 def validate_request(request: dict[str, Any]) -> dict[str, Any]:
@@ -37,8 +37,12 @@ def rank_archive(profile: dict[str, Any], archive: list[dict[str, Any]]) -> list
         {
             "id": topic["id"],
             "title": topic["title"],
-            "department": topic["department"],
+            "domain": topic.get("domain", topic.get("department", "")),
             "year": topic["year"],
+            "language": topic.get("language", ""),
+            "source": topic.get("source", ""),
+            "url": topic.get("url", ""),
+            "is_synthetic": topic.get("is_synthetic", False),
             "similarity": max(
                 blended_similarity(profile["title"], topic["title"]),
                 blended_similarity(candidate, topic_to_text(topic)),

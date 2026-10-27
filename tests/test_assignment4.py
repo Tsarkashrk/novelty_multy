@@ -64,9 +64,12 @@ class Assignment4Scenarios(unittest.TestCase):
         events = self.events()
         self.assertEqual(sum(item["event_type"] == "AGENT" for item in events), 6)
         self.assertEqual(sum(item["event_type"] == "TOOL" for item in events), 10)
+        archive = report["agent_outputs"]["novelty_assessment_agent"]["novelty_report"]["archive"]
+        self.assertEqual(archive["source"], "openalex_csv")
+        self.assertEqual((archive["records_total"], archive["records_used"], archive["synthetic_excluded"]), (230, 160, 70))
 
     def test_ts02_exact_archive_duplicate_is_blocked(self) -> None:
-        report = self.orchestrator().run(self.request("Intelligent Platform for Diploma Project Lifecycle Management"))
+        report = self.orchestrator().run(self.request("Intelligent Platform for Diploma Project Lifecycle Management", archive_source="sample"))
         self.assertEqual(report["status"], "COMPLETED")
         self.assertEqual(report["final_decision"], "BLOCK_TOPIC")
         duplicate = report["agent_outputs"]["duplication_control_agent"]["duplication_report"]
@@ -113,7 +116,7 @@ class Assignment4Scenarios(unittest.TestCase):
         self.assertEqual([item["status"] for item in calls], ["ERROR", "OK"])
 
     def test_ts09_persistent_source_failure_is_logged(self) -> None:
-        with patch("src.agents.novelty_agent.load_json_dataset", side_effect=OSError("archive unavailable")):
+        with patch("src.agents.novelty_agent.load_topic_archive", side_effect=OSError("archive unavailable")):
             report = self.orchestrator().run(self.request())
         self.assertEqual(report["status"], "FAILED")
         self.assertEqual(report["errors"][0]["agent"], "novelty_assessment_agent")

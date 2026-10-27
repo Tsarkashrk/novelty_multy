@@ -1,55 +1,78 @@
 {
-  "task_id": "0e4b2705-124d-4c70-a718-9cd0c84e36f0",
+  "task_id": "181a7640-d519-43c8-81bb-998cf31b7a59",
   "status": "COMPLETED",
   "final_decision": "APPROVE_FOR_TEACHER_REVIEW",
   "agent_outputs": {
     "topic_intake_agent": {
       "topic_profile": {
-        "title": "Adaptive Assessment of Student Project Progress Using Research Analytics",
-        "normalized_title": "adaptive assessment student project progress using research analytics",
+        "title": "Intelligent Platform for Managing Diploma and Master's Projects with Functions for Assessing Topic Novelty, Eliminating Duplication, Assigning Supervisors, and Monitoring the Basic Completion Cycle",
+        "normalized_title": "intelligent platform managing diploma master projects functions assessing topic novelty eliminating duplication assigning supervisors monitoring basic completion cycle",
         "student": "Sample Student",
         "department": "Computer Science",
         "keywords": [
-          "adaptive",
-          "assessment",
-          "student",
-          "project",
-          "progress",
-          "using",
-          "research",
-          "analytics"
+          "intelligent",
+          "platform",
+          "managing",
+          "diploma",
+          "master",
+          "projects",
+          "functions",
+          "assessing",
+          "topic",
+          "novelty",
+          "eliminating",
+          "duplication"
         ],
         "warnings": []
       }
     },
     "novelty_assessment_agent": {
       "novelty_report": {
-        "novelty_score": 74.8,
+        "novelty_score": 83.8,
         "interpretation": "HIGH_NOVELTY",
-        "max_similarity": 0.2521,
+        "max_similarity": 0.162,
         "top_matches": [
           {
-            "id": "T-2023-014",
-            "title": "Duplicate Detection System for Student Research Projects",
-            "department": "Computer Science",
-            "year": 2023,
-            "similarity": 0.2521
+            "id": "OA0105",
+            "title": "An integrated software platform for the efficient management of projects",
+            "domain": "Software Engineering Techniques and Practices",
+            "year": 2018,
+            "language": "en",
+            "source": "OpenAlex",
+            "url": "https://openalex.org/W2912835758",
+            "is_synthetic": false,
+            "similarity": 0.162
           },
           {
-            "id": "T-2026-002",
-            "title": "Intelligent Platform for Diploma Project Lifecycle Management",
-            "department": "Computer Science",
-            "year": 2026,
-            "similarity": 0.1777
+            "id": "OA0102",
+            "title": "Data management platform for citizen science education projects",
+            "domain": "Arduino and IoT Applications",
+            "year": 2018,
+            "language": "en",
+            "source": "OpenAlex",
+            "url": "https://openalex.org/W2886617695",
+            "is_synthetic": false,
+            "similarity": 0.1508
           },
           {
-            "id": "T-2024-019",
-            "title": "Monitoring Completion Progress in Graduate Capstone Projects",
-            "department": "Information Systems",
-            "year": 2024,
-            "similarity": 0.1378
+            "id": "OA0107",
+            "title": "TESTBENCH: Automated management and evaluation platform of code projects in education",
+            "domain": "Teaching and Learning Programming",
+            "year": 2025,
+            "language": "en",
+            "source": "OpenAlex",
+            "url": "https://openalex.org/W7112872138",
+            "is_synthetic": false,
+            "similarity": 0.1417
           }
-        ]
+        ],
+        "archive": {
+          "source": "openalex_csv",
+          "file": "openalex_thesis_topics.csv",
+          "records_total": 230,
+          "records_used": 160,
+          "synthetic_excluded": 70
+        }
       }
     },
     "duplication_control_agent": {
@@ -57,28 +80,40 @@
         "status": "CLEAR",
         "risk_level": "LOW",
         "recommended_action": "Topic can continue to supervisor matching.",
-        "max_similarity": 0.2521,
+        "max_similarity": 0.162,
         "evidence": [
           {
-            "id": "T-2023-014",
-            "title": "Duplicate Detection System for Student Research Projects",
-            "department": "Computer Science",
-            "year": 2023,
-            "similarity": 0.2521
+            "id": "OA0105",
+            "title": "An integrated software platform for the efficient management of projects",
+            "domain": "Software Engineering Techniques and Practices",
+            "year": 2018,
+            "language": "en",
+            "source": "OpenAlex",
+            "url": "https://openalex.org/W2912835758",
+            "is_synthetic": false,
+            "similarity": 0.162
           },
           {
-            "id": "T-2026-002",
-            "title": "Intelligent Platform for Diploma Project Lifecycle Management",
-            "department": "Computer Science",
-            "year": 2026,
-            "similarity": 0.1777
+            "id": "OA0102",
+            "title": "Data management platform for citizen science education projects",
+            "domain": "Arduino and IoT Applications",
+            "year": 2018,
+            "language": "en",
+            "source": "OpenAlex",
+            "url": "https://openalex.org/W2886617695",
+            "is_synthetic": false,
+            "similarity": 0.1508
           },
           {
-            "id": "T-2024-019",
-            "title": "Monitoring Completion Progress in Graduate Capstone Projects",
-            "department": "Information Systems",
-            "year": 2024,
-            "similarity": 0.1378
+            "id": "OA0107",
+            "title": "TESTBENCH: Automated management and evaluation platform of code projects in education",
+            "domain": "Teaching and Learning Programming",
+            "year": 2025,
+            "language": "en",
+            "source": "OpenAlex",
+            "url": "https://openalex.org/W7112872138",
+            "is_synthetic": false,
+            "similarity": 0.1417
           }
         ]
       }
@@ -90,10 +125,10 @@
             "id": "S-004",
             "name": "Dr. Ruslan Iskakov",
             "department": "Computer Science",
-            "score": 0.485,
+            "score": 0.447,
             "capacity_note": "5 free slot(s)",
             "matched_keywords": [
-              "project"
+              "monitoring"
             ],
             "reason": "expertise, department fit, and capacity were scored separately"
           },

@@ -1,15 +1,15 @@
 [
   {
     "scenario": "normal",
-    "task_id": "0e4b2705-124d-4c70-a718-9cd0c84e36f0",
+    "task_id": "181a7640-d519-43c8-81bb-998cf31b7a59",
     "status": "COMPLETED",
     "decision": "APPROVE_FOR_TEACHER_REVIEW",
     "duplication": "CLEAR",
     "balanced_load": true
   },
   {
-    "scenario": "exact_duplicate",
-    "task_id": "d6b90cf9-84b8-466e-92ae-6e0b54923a19",
+    "scenario": "exact_openalex_duplicate",
+    "task_id": "6a8200ec-c52d-46e1-bd45-ceda0097668f",
     "status": "COMPLETED",
     "decision": "BLOCK_TOPIC",
     "duplication": "BLOCKED",
@@ -17,7 +17,7 @@
   },
   {
     "scenario": "short_title",
-    "task_id": "bf87176b-657b-4544-b43f-e887d846130e",
+    "task_id": "47e79164-a74f-4870-9417-0c38a66709d1",
     "status": "COMPLETED",
     "decision": "REVISE_BEFORE_TEACHER_REVIEW",
     "duplication": "CLEAR",
@@ -25,7 +25,7 @@
   },
   {
     "scenario": "overdue",
-    "task_id": "9829a718-4307-4271-bbd1-9e3f787bc299",
+    "task_id": "6062ae8e-1520-4ba5-a924-1a15a416c2aa",
     "status": "COMPLETED",
     "decision": "REVISE_BEFORE_TEACHER_REVIEW",
     "duplication": "CLEAR",
@@ -33,7 +33,7 @@
   },
   {
     "scenario": "completed_milestones",
-    "task_id": "e4b400e6-a2dd-45e0-81ae-1dfb76dc699d",
+    "task_id": "81568657-dafd-4aa5-89d2-5c5cc2ab3cd4",
     "status": "COMPLETED",
     "decision": "APPROVE_FOR_TEACHER_REVIEW",
     "duplication": "CLEAR",
@@ -41,10 +41,26 @@
   },
   {
     "scenario": "full_supervisor_excluded",
-    "task_id": "9d612b1e-ffb8-456f-bff3-249fe92fe892",
+    "task_id": "88cb1513-f4d1-46f7-935d-07d01dcdb595",
     "status": "COMPLETED",
     "decision": "APPROVE_FOR_TEACHER_REVIEW",
     "duplication": "CLEAR",
+    "balanced_load": true
+  },
+  {
+    "scenario": "synthetic_variant",
+    "task_id": "cc940069-cb81-4cf9-8993-a7f34d148a52",
+    "status": "COMPLETED",
+    "decision": "BLOCK_TOPIC",
+    "duplication": "BLOCKED",
+    "balanced_load": true
+  },
+  {
+    "scenario": "sample_archive_duplicate",
+    "task_id": "61330160-46cd-4f2d-a2e0-7d30d9787be3",
+    "status": "COMPLETED",
+    "decision": "BLOCK_TOPIC",
+    "duplication": "BLOCKED",
     "balanced_load": true
   }
 ]

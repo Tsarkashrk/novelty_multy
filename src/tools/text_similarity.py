@@ -24,12 +24,11 @@ STOPWORDS = {
     "по",
     "с",
     "со",
-    "the",
 }
 
 
 def tokenize(text: str) -> list[str]:
-    tokens = re.findall(r"[a-zа-я0-9]+", text.lower())
+    tokens = re.findall(r"[^\W_]+", text.lower(), flags=re.UNICODE)
     return [token for token in tokens if token not in STOPWORDS and len(token) > 1]
 
 

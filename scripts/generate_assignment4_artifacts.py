@@ -4,6 +4,7 @@ import json
 import tempfile
 from pathlib import Path
 
+from src.main import DEFAULT_TOPIC
 from src.orchestrator import Orchestrator
 from src.storage.logger import AgentLogger
 from src.storage.state_store import StateStore
@@ -13,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ARTIFACTS = ROOT / "artifacts"
 
 
-def request(title: str, *, week: int = 5, completed: list[str] | None = None) -> dict:
+def request(title: str, *, week: int = 5, completed: list[str] | None = None, source: str = "openalex", include_synthetic: bool = False) -> dict:
     return {
         "raw_topic": title,
         "student": "Sample Student",
@@ -21,18 +22,22 @@ def request(title: str, *, week: int = 5, completed: list[str] | None = None) ->
         "keywords": [],
         "current_week": week,
         "completed_milestones": completed if completed is not None else ["M1"],
+        "archive_source": source,
+        "include_synthetic": include_synthetic,
     }
 
 
 def main() -> None:
     ARTIFACTS.mkdir(exist_ok=True)
     cases = [
-        ("normal", request("Adaptive Assessment of Student Project Progress Using Research Analytics")),
-        ("exact_duplicate", request("Intelligent Platform for Diploma Project Lifecycle Management")),
+        ("normal", request(DEFAULT_TOPIC)),
+        ("exact_openalex_duplicate", request("Artificial intelligence, education and music : the use of artificial intelligence to encourage and facilitate music composition by novices")),
         ("short_title", request("AI System")),
-        ("overdue", request("Adaptive Assessment of Student Project Progress Using Research Analytics", week=11)),
-        ("completed_milestones", request("Adaptive Assessment of Student Project Progress Using Research Analytics", week=10, completed=["M1", "M2"])),
+        ("overdue", request(DEFAULT_TOPIC, week=11)),
+        ("completed_milestones", request(DEFAULT_TOPIC, week=10, completed=["M1", "M2"])),
         ("full_supervisor_excluded", request("Academic Integrity and Plagiarism Detection Platform")),
+        ("synthetic_variant", request("Machine learning chatbot to support education search purpose in Dublin", include_synthetic=True)),
+        ("sample_archive_duplicate", request("Intelligent Platform for Diploma Project Lifecycle Management", source="sample")),
     ]
     with tempfile.TemporaryDirectory() as temp_dir:
         temp = Path(temp_dir)
