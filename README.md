@@ -1,6 +1,6 @@
 # Intelligent Platform for Managing Diploma and Master's Projects
 
-Assignment 2 prototype for a multi-agent AI system that supports diploma and master's project management:
+Assignment 2 architecture and Assignment 4 working multi-agent system for diploma and master's project management:
 
 - assessing topic novelty;
 - eliminating duplication;
@@ -22,7 +22,7 @@ A single agent would have to validate the submitted topic, compare it with archi
 
 An orchestrator only routes structured JSON messages and does not perform domain work.
 
-## Assignment 2 Checklist
+## Assignment 2 Review
 
 | Requirement | Status |
 | --- | --- |
@@ -37,12 +37,13 @@ An orchestrator only routes structured JSON messages and does not perform domain
 | Logging | Done: SQLite + JSONL logs |
 | API keys not stored in code | Done: prototype uses local data only |
 
+The Assignment 2 design and two-agent exchange requirements are met. The earlier 16.7% figure measured agent invocations only; Assignment 4 now measures actual tool calls. See [Assignment 4 submission](ASSIGNMENT_4_SUBMISSION_RU.md) for evidence and limitations.
+
 ## Quick Start
 
-Use Python 3.10+.
+Use Python 3.10+ on macOS or Linux. From the repository root:
 
 ```bash
-cd outputs/diploma_ai_platform_assignment2
 python3 -m src.main \
   --topic "Intelligent Platform for Managing Diploma and Master's Projects with Functions for Assessing Topic Novelty, Eliminating Duplication, Assigning Supervisors, and Monitoring the Basic Completion Cycle" \
   --student "Sample Student" \
@@ -53,13 +54,22 @@ python3 -m src.main \
 Run the default demo:
 
 ```bash
-python3 -m src.main --demo
+python3 -m src.main --demo --completed M1
+
+# Exact archived title: duplication is BLOCKED
+python3 -m src.main --topic "Intelligent Platform for Diploma Project Lifecycle Management" --completed M1
+
+# Monitor progress at week 10
+python3 -m src.main --demo --current-week 10 --completed M1,M2
 ```
 
 Run tests:
 
 ```bash
-python3 -m unittest discover -s tests
+python3 -m unittest discover -s tests -v
+
+# Regenerate shareable result and JSONL log files
+python3 -m scripts.generate_assignment4_artifacts
 ```
 
 ## Prototype Output
@@ -72,12 +82,15 @@ The CLI returns a JSON report with:
 - ranked supervisor recommendations;
 - completion cycle milestones;
 - final quality gate decision;
-- load distribution by agents.
+- load distribution by real tool calls (and LLM calls if later integrated).
+- structured `status` and `errors` for failures.
 
 Runtime artifacts are written to:
 
-- `runtime/state.db` - explicit task state, messages, and call records;
-- `runtime/agent_calls.jsonl` - human-readable agent/tool call log.
+- `runtime/state.db` - task state, request/result messages, and per-call events;
+- `runtime/agent_calls.jsonl` - per-agent and per-tool JSONL events.
+
+Each successful run makes 6 agent calls and 10 actual tool calls. The largest tool-call share is 20%. The orchestrator stops after the configured number of steps or time budget, retries temporary failures once by default, and returns a clear error report when a run fails. CLI exits with code 2 for a failed run.
 
 ## Repository Structure
 
@@ -87,11 +100,13 @@ Runtime artifacts are written to:
 │   ├── archive_topics.json
 │   ├── completion_template.json
 │   └── supervisors.json
+├── artifacts/
 ├── docs/
 │   ├── agents_specification.md
 │   ├── architecture.md
 │   ├── message_formats.md
 │   └── test_scenarios.md
+├── scripts/
 ├── src/
 │   ├── agents/
 │   ├── storage/
@@ -99,9 +114,10 @@ Runtime artifacts are written to:
 │   ├── main.py
 │   └── orchestrator.py
 └── tests/
+    ├── test_assignment4.py
     └── test_prototype.py
 ```
 
-## Notes for Assignment 4
+## Scope and Limitations
 
-The current Assignment 2 prototype uses deterministic local agent logic so that it can be launched without API keys. For Assignment 4, each agent can be connected to an LLM adapter while keeping the same JSON message contracts, state store, and logging format.
+The system runs entirely offline using transparent lexical similarity and rule-based decisions. There are no LLM calls or API keys. The novelty score is an estimate relative to the synthetic seven-topic archive, not a plagiarism verdict or academic approval. Supervisor records are also synthetic; recommendations do not reserve a slot. The hard time limit uses `SIGALRM` on macOS/Linux in the main thread; other environments use deadline checks between calls. The CLI handles one request at a time.

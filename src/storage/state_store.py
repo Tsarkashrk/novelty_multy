@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 
 class StateStore:
@@ -12,8 +13,14 @@ class StateStore:
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._init_schema()
 
-    def _connect(self) -> sqlite3.Connection:
-        return sqlite3.connect(self.db_path)
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        conn = sqlite3.connect(self.db_path)
+        try:
+            with conn:
+                yield conn
+        finally:
+            conn.close()
 
     def _init_schema(self) -> None:
         with self._connect() as conn:
@@ -41,13 +48,16 @@ class StateStore:
             )
             conn.execute(
                 """
-                CREATE TABLE IF NOT EXISTS agent_calls (
+                CREATE TABLE IF NOT EXISTS call_events (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     task_id TEXT NOT NULL,
                     agent TEXT NOT NULL,
+                    event_type TEXT NOT NULL,
+                    name TEXT NOT NULL,
                     status TEXT NOT NULL,
-                    duration_ms INTEGER NOT NULL,
-                    tools_json TEXT NOT NULL,
+                    duration_ms REAL NOT NULL,
+                    attempt INTEGER NOT NULL,
+                    error TEXT,
                     created_at TEXT DEFAULT CURRENT_TIMESTAMP
                 )
                 """
@@ -85,20 +95,18 @@ class StateStore:
                 ),
             )
 
-    def save_agent_call(self, call: dict[str, Any]) -> None:
+    def save_call_event(self, event: dict[str, Any]) -> None:
         with self._connect() as conn:
             conn.execute(
                 """
-                INSERT INTO agent_calls
-                (task_id, agent, status, duration_ms, tools_json)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO call_events
+                (task_id, agent, event_type, name, status, duration_ms, attempt, error)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
-                    call["task_id"],
-                    call["agent"],
-                    call["status"],
-                    call["duration_ms"],
-                    json.dumps(call.get("tools", []), ensure_ascii=False),
+                    event["task_id"], event["agent"], event["event_type"],
+                    event["name"], event["status"], event["duration_ms"],
+                    event["attempt"], event.get("error"),
                 ),
             )
 
@@ -107,8 +115,8 @@ class StateStore:
             rows = conn.execute(
                 """
                 SELECT agent, COUNT(*)
-                FROM agent_calls
-                WHERE task_id = ? AND status = 'OK'
+                FROM call_events
+                WHERE task_id = ? AND event_type IN ('TOOL', 'LLM')
                 GROUP BY agent
                 """,
                 (task_id,),

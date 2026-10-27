@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from src.agents.base import AgentMessage, BaseAgent
 from src.tools.data_loader import load_json_dataset
+from src.tools.domain_tools import plan_milestones
 
 
 class CompletionCycleMonitorAgent(BaseAgent):
@@ -10,40 +11,10 @@ class CompletionCycleMonitorAgent(BaseAgent):
     tools = ["completion_template_dataset", "milestone_planner"]
 
     def run(self, message: AgentMessage, context: dict) -> dict:
-        duplication = context["agent_outputs"]["duplication_control_agent"][
+        duplication = message.payload["previous_outputs"]["duplication_control_agent"][
             "duplication_report"
         ]
-        template = load_json_dataset("completion_template.json")
-
-        if duplication["status"] == "BLOCKED":
-            overall_risk = "HIGH"
-        elif duplication["status"] == "REVISION_REQUIRED":
-            overall_risk = "MEDIUM"
-        else:
-            overall_risk = "LOW"
-
-        milestones = []
-        for item in template:
-            status = "TODO"
-            if item["code"] == "M2":
-                status = "IN_PROGRESS"
-            if duplication["status"] == "BLOCKED" and item["code"] != "M1":
-                status = "WAITING_TOPIC_REVISION"
-
-            milestones.append(
-                {
-                    "code": item["code"],
-                    "name": item["name"],
-                    "week": item["week"],
-                    "expected_artifact": item["expected_artifact"],
-                    "status": status,
-                }
-            )
-
-        return {
-            "completion_plan": {
-                "milestones": milestones,
-                "overall_risk": overall_risk,
-                "monitoring_note": "Milestones follow the assignment schedule and can be expanded in Assignment 4.",
-            }
-        }
+        tools = context["tools"]
+        template = tools.call("completion_template_dataset", load_json_dataset, "completion_template.json")
+        plan = tools.call("milestone_planner", plan_milestones, template, duplication["status"], message.payload["request"])
+        return {"completion_plan": plan}

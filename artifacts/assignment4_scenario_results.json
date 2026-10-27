@@ -1,0 +1,50 @@
+[
+  {
+    "scenario": "normal",
+    "task_id": "0e4b2705-124d-4c70-a718-9cd0c84e36f0",
+    "status": "COMPLETED",
+    "decision": "APPROVE_FOR_TEACHER_REVIEW",
+    "duplication": "CLEAR",
+    "balanced_load": true
+  },
+  {
+    "scenario": "exact_duplicate",
+    "task_id": "d6b90cf9-84b8-466e-92ae-6e0b54923a19",
+    "status": "COMPLETED",
+    "decision": "BLOCK_TOPIC",
+    "duplication": "BLOCKED",
+    "balanced_load": true
+  },
+  {
+    "scenario": "short_title",
+    "task_id": "bf87176b-657b-4544-b43f-e887d846130e",
+    "status": "COMPLETED",
+    "decision": "REVISE_BEFORE_TEACHER_REVIEW",
+    "duplication": "CLEAR",
+    "balanced_load": true
+  },
+  {
+    "scenario": "overdue",
+    "task_id": "9829a718-4307-4271-bbd1-9e3f787bc299",
+    "status": "COMPLETED",
+    "decision": "REVISE_BEFORE_TEACHER_REVIEW",
+    "duplication": "CLEAR",
+    "balanced_load": true
+  },
+  {
+    "scenario": "completed_milestones",
+    "task_id": "e4b400e6-a2dd-45e0-81ae-1dfb76dc699d",
+    "status": "COMPLETED",
+    "decision": "APPROVE_FOR_TEACHER_REVIEW",
+    "duplication": "CLEAR",
+    "balanced_load": true
+  },
+  {
+    "scenario": "full_supervisor_excluded",
+    "task_id": "9d612b1e-ffb8-456f-bff3-249fe92fe892",
+    "status": "COMPLETED",
+    "decision": "APPROVE_FOR_TEACHER_REVIEW",
+    "duplication": "CLEAR",
+    "balanced_load": true
+  }
+]

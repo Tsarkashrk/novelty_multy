@@ -28,6 +28,14 @@ class AgentError(RuntimeError):
     """Raised when an agent cannot complete its assigned task."""
 
 
+class TransientAgentError(AgentError):
+    """A temporary failure that may succeed on retry."""
+
+
+class ExecutionTimeout(AgentError):
+    """The task exceeded its time budget."""
+
+
 class BaseAgent:
     name = "base_agent"
     role = "Base agent"

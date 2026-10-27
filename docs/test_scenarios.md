@@ -1,24 +1,20 @@
-# Test Scenarios
+# Assignment 4 Test Scenarios
 
-These scenarios can be used for Assignment 4 and exam preparation. Assignment 2 already includes a runnable prototype and one automated unit test suite.
+Run all scenarios with `python3 -m unittest discover -s tests -v`. The 12 integrated cases below are implemented in `tests/test_assignment4.py`. `test_threshold_boundaries` is an additional unit check. The older Assignment 2 smoke test also remains.
 
-| ID | Scenario | Input Topic | Expected Result |
-| --- | --- | --- | --- |
-| TS-01 | Normal topic with partial similarity | Intelligent Platform for Managing Diploma and Master's Projects with Novelty Assessment and Supervisor Matching | Topic is accepted for teacher review or revision, supervisor recommendations are returned. |
-| TS-02 | Clear duplicate | Intelligent Platform for Diploma Project Lifecycle Management | Duplication status is `BLOCKED` or `REVISION_REQUIRED`, with archived topic evidence. |
-| TS-03 | Weak topic title | AI System | Topic Intake Agent returns warning about short title and Quality Gate asks for revision. |
-| TS-04 | No department match | Quantum Biology Platform for Thesis Topics | Supervisor Matching Agent still ranks available supervisors but warns about weak expertise fit. |
-| TS-05 | Supervisor capacity issue | Topic focused on plagiarism detection when matching supervisor is full | Recommendation excludes or penalizes full-capacity supervisor. |
-| TS-06 | Full defense scenario | Dissertation topic with all required fields | All 6 agents run, logs show balanced distribution, final JSON is generated. |
+| ID | Input or fault | Expected result |
+| --- | --- | --- |
+| TS-01 | New topic, week 5, M1 complete | Six agents complete; 10 tool events and six agent events; no share above 40%. |
+| TS-02 | Exact archived title `Intelligent Platform for Diploma Project Lifecycle Management` | Duplication `BLOCKED`, final `BLOCK_TOPIC`, archive ID T-2026-002 cited. |
+| TS-03 | Short title `AI System` | Intake warning and `REVISE_BEFORE_TEACHER_REVIEW`. |
+| TS-04 | Week 11 with M2 incomplete | M2 `OVERDUE`, high risk and revision requested. |
+| TS-05 | Week 10 with M1 and M2 complete | M1/M2 `DONE`; M3 `IN_PROGRESS`. |
+| TS-06 | Topic matching supervisor S-005, whose capacity is full | S-005 excluded from available recommendations. |
+| TS-07 | Blank title | Structured `FAILED` report, clear title error, no repeated validation. |
+| TS-08 | Intake agent fails transiently once | Second attempt succeeds; both attempts appear in logs. |
+| TS-09 | Archive source raises `OSError` twice | Two failed tool and agent attempts logged; structured `FAILED` report. |
+| TS-10 | Agent sleeps past the time budget | Prompt `ExecutionTimeout` report and `TIMEOUT` event. |
+| TS-11 | Maximum of three agent steps | Three outputs saved, then structured step-limit failure. |
+| TS-12 | Normal request | Twelve SQLite messages, final task state, six agent events, ten tool events persisted. |
 
-## Manual Command Example
-
-```bash
-python3 -m src.main --demo
-```
-
-## Automated Test Command
-
-```bash
-python3 -m unittest discover -s tests
-```
+Six representative successful inputs and outcomes are also available in `artifacts/assignment4_scenario_results.json`. The demo output and its 16 JSONL events are in `artifacts/assignment4_demo_output.json` and `artifacts/assignment4_demo_calls.jsonl`. Regenerate these with `python3 -m scripts.generate_assignment4_artifacts`.

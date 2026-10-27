@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from src.agents.base import AgentMessage, BaseAgent
 from src.tools.data_loader import load_json_dataset
-from src.tools.text_similarity import blended_similarity, topic_to_text
+from src.tools.domain_tools import rank_archive
 
 
 class NoveltyAssessmentAgent(BaseAgent):
@@ -11,24 +11,10 @@ class NoveltyAssessmentAgent(BaseAgent):
     tools = ["archive_topics_dataset", "text_similarity_tool"]
 
     def run(self, message: AgentMessage, context: dict) -> dict:
-        profile = context["agent_outputs"]["topic_intake_agent"]["topic_profile"]
-        archive = load_json_dataset("archive_topics.json")
-
-        candidate_text = " ".join([profile["title"], " ".join(profile["keywords"])])
-        matches = []
-        for topic in archive:
-            similarity = blended_similarity(candidate_text, topic_to_text(topic))
-            matches.append(
-                {
-                    "id": topic["id"],
-                    "title": topic["title"],
-                    "department": topic["department"],
-                    "year": topic["year"],
-                    "similarity": similarity,
-                }
-            )
-
-        top_matches = sorted(matches, key=lambda item: item["similarity"], reverse=True)[:3]
+        profile = message.payload["previous_outputs"]["topic_intake_agent"]["topic_profile"]
+        tools = context["tools"]
+        archive = tools.call("archive_topics_dataset", load_json_dataset, "archive_topics.json")
+        top_matches = tools.call("text_similarity_tool", rank_archive, profile, archive)
         max_similarity = top_matches[0]["similarity"] if top_matches else 0.0
         novelty_score = round((1.0 - max_similarity) * 100, 1)
 

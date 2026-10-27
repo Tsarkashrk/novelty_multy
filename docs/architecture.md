@@ -4,10 +4,10 @@
 
 The prototype uses an **orchestrator + pipeline** pattern with explicit shared state.
 
-- The orchestrator creates the task, sends JSON messages, records state, and enforces step limits.
+- The orchestrator creates the task, sends JSON messages, records state, and enforces step/time limits and retry policy.
 - Domain agents perform only their own specialized work.
-- All messages and results are stored in SQLite and JSONL logs.
-- Agents use local tools and data sources: archived project topics, supervisor profiles, completion milestone templates, and the SQLite state store.
+- Request and result messages are stored in SQLite. Agent and tool call events are stored in SQLite and JSONL.
+- Agents use local tools and datasets: archived project topics, supervisor profiles, and completion milestone templates. The orchestrator and ToolRunner use SQLite for state and call events.
 
 ## Architecture Diagram
 
@@ -15,22 +15,22 @@ The prototype uses an **orchestrator + pipeline** pattern with explicit shared s
 flowchart TD
     U[Student / Coordinator CLI Request] --> O[Orchestrator]
 
-    O --> A1[Topic Intake Agent]
+    O -->|RUN_AGENT JSON| A1[Topic Intake Agent]
     A1 -->|topic_profile JSON| O
 
-    O --> A2[Novelty Assessment Agent]
+    O -->|RUN_AGENT JSON| A2[Novelty Assessment Agent]
     A2 -->|novelty_report JSON| O
 
-    O --> A3[Duplication Control Agent]
+    O -->|RUN_AGENT JSON| A3[Duplication Control Agent]
     A3 -->|duplication_report JSON| O
 
-    O --> A4[Supervisor Matching Agent]
+    O -->|RUN_AGENT JSON| A4[Supervisor Matching Agent]
     A4 -->|supervisor_recommendations JSON| O
 
-    O --> A5[Completion Cycle Monitor Agent]
+    O -->|RUN_AGENT JSON| A5[Completion Cycle Monitor Agent]
     A5 -->|completion_plan JSON| O
 
-    O --> A6[Quality Gate Agent]
+    O -->|RUN_AGENT JSON| A6[Quality Gate Agent]
     A6 -->|quality_gate_report JSON| O
 
     O --> R[Final Decision JSON]
@@ -40,7 +40,15 @@ flowchart TD
     D2[(supervisors.json)] --> A4
     D3[(completion_template.json)] --> A5
     DB[(SQLite state.db)] <--> O
-    L[(agent_calls.jsonl)] <--> O
+    T[Instrumented ToolRunner] --> DB
+    A1 --> T
+    A2 --> T
+    A3 --> T
+    A4 --> T
+    A5 --> T
+    A6 --> T
+    T --> L[(agent_calls.jsonl)]
+    O --> L
 ```
 
 ## Typical Scenario Flow
@@ -54,17 +62,17 @@ flowchart TD
 7. Quality Gate Agent checks whether the topic can move to teacher review.
 8. The orchestrator returns a final JSON report and records all messages.
 
-## Load Balance for Assignment 2 Prototype
+## Load Balance for Assignment 4 Typical Run
 
-The typical run calls each domain agent once:
+The typical run calls each domain agent once. ToolRunner records each actual tool invocation:
 
-| Agent | Calls | Share |
+| Agent | Tool calls | Share |
 | --- | ---: | ---: |
-| Topic Intake Agent | 1 | 16.7% |
-| Novelty Assessment Agent | 1 | 16.7% |
-| Duplication Control Agent | 1 | 16.7% |
-| Supervisor Matching Agent | 1 | 16.7% |
-| Completion Cycle Monitor Agent | 1 | 16.7% |
-| Quality Gate Agent | 1 | 16.7% |
+| Topic Intake Agent | 2 | 20% |
+| Novelty Assessment Agent | 2 | 20% |
+| Duplication Control Agent | 1 | 10% |
+| Supervisor Matching Agent | 2 | 20% |
+| Completion Cycle Monitor Agent | 2 | 20% |
+| Quality Gate Agent | 1 | 10% |
 
-No domain agent performs more than 40% of all agent calls.
+No domain agent performs more than 40% of tool/LLM calls in the typical run. No LLM is configured, so the denominator is 10 actual tool calls. Retry attempts count toward load. See `artifacts/assignment4_demo_calls.jsonl`.

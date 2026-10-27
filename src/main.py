@@ -17,7 +17,7 @@ DEFAULT_TOPIC = (
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Assignment 2 multi-agent prototype for diploma project management."
+        description="Multi-agent diploma project topic assessment and completion monitoring."
     )
     parser.add_argument("--demo", action="store_true", help="Run with the default topic.")
     parser.add_argument("--topic", help="Submitted diploma or master's project topic.")
@@ -25,21 +25,29 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--department", default="Computer Science", help="Department name.")
     parser.add_argument(
         "--keywords",
-        default="multi-agent, novelty assessment, duplication detection, supervisor matching, monitoring",
+        default=None,
         help="Comma-separated topic keywords.",
     )
     parser.add_argument("--output", help="Optional path for saving the JSON report.")
+    parser.add_argument("--current-week", type=int, default=5, help="Current semester week (1-30).")
+    parser.add_argument("--completed", default="", help="Comma-separated completed milestone codes, e.g. M1,M2.")
+    parser.add_argument("--max-steps", type=int, default=10, help="Maximum number of agent steps.")
+    parser.add_argument("--timeout", type=float, default=10.0, help="Maximum run time in seconds.")
+    parser.add_argument("--retries", type=int, default=1, help="Retries for transient agent failures.")
     return parser
 
 
 def request_from_args(args: argparse.Namespace) -> dict[str, Any]:
-    topic = DEFAULT_TOPIC if args.demo or not args.topic else args.topic
-    keywords = [item.strip() for item in args.keywords.split(",") if item.strip()]
+    topic = DEFAULT_TOPIC if args.demo or args.topic is None else args.topic
+    default_keywords = "multi-agent, novelty assessment, duplication detection, supervisor matching, monitoring" if args.demo or not args.topic else ""
+    keywords = [item.strip() for item in (args.keywords if args.keywords is not None else default_keywords).split(",") if item.strip()]
     return {
         "raw_topic": topic,
         "student": args.student,
         "department": args.department,
         "keywords": keywords,
+        "current_week": args.current_week,
+        "completed_milestones": [item.strip() for item in args.completed.split(",") if item.strip()],
     }
 
 
@@ -47,7 +55,14 @@ def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
 
-    orchestrator = Orchestrator()
+    try:
+        orchestrator = Orchestrator(
+            max_steps=args.max_steps,
+            max_runtime_seconds=args.timeout,
+            max_agent_retries=args.retries,
+        )
+    except ValueError as exc:
+        parser.error(str(exc))
     report = orchestrator.run(request_from_args(args))
     rendered = json.dumps(report, ensure_ascii=False, indent=2)
 
@@ -57,7 +72,7 @@ def main() -> int:
         output_path.write_text(rendered + "\n", encoding="utf-8")
 
     print(rendered)
-    return 0
+    return 0 if report["status"] == "COMPLETED" else 2
 
 
 if __name__ == "__main__":

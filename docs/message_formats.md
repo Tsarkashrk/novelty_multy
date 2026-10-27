@@ -7,9 +7,19 @@
   "raw_topic": "Intelligent Platform for Managing Diploma and Master's Projects...",
   "student": "Sample Student",
   "department": "Computer Science",
-  "keywords": ["multi-agent", "novelty assessment", "supervisor matching"]
+  "keywords": ["multi-agent", "novelty assessment", "supervisor matching"],
+  "current_week": 5,
+  "completed_milestones": ["M1"]
 }
 ```
+
+## Agent Message
+
+`RUN_AGENT` carries the user request and completed agent outputs. `AGENT_RESULT` carries the current agent's output. Both have `message_id`, `task_id`, `sender`, `recipient`, `message_type`, `payload`, and `created_at`. The orchestrator stores both directions in SQLite.
+
+## Call Event
+
+Every actual agent or tool call writes one JSONL record and one SQLite `call_events` row with `task_id`, `agent`, `event_type` (`AGENT` or `TOOL`), `name`, `status`, `duration_ms`, `attempt`, and optional `error`. The load calculation counts `TOOL` and `LLM` event types only. The current offline version makes no `LLM` calls.
 
 ## `topic_profile`
 
