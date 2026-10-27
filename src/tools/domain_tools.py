@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from src.agents.base import AgentError
-from src.tools.text_similarity import blended_similarity, tokenize, topic_to_text
+from src.tools.text_similarity import blended_similarity, normalize_text, tokenize, topic_to_text
 
 
 def validate_request(request: dict[str, Any]) -> dict[str, Any]:
@@ -31,7 +31,36 @@ def extract_keywords(title: str, provided: Any) -> list[str]:
     return list(dict.fromkeys([*(item.strip() for item in provided if item.strip()), *tokenize(title)]))[:12]
 
 
-def rank_archive(profile: dict[str, Any], archive: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def build_topic_profile(validated: dict[str, Any], keywords: list[str]) -> dict[str, Any]:
+    title = validated["title"]
+    warnings = []
+    if len(title.split()) < 5:
+        warnings.append("Topic title is too short and should be clarified.")
+    if len(keywords) < 3:
+        warnings.append("At least 3 meaningful keywords are recommended.")
+    return {
+        "title": title,
+        "normalized_title": normalize_text(title),
+        "student": validated["student"],
+        "department": validated["department"],
+        "keywords": keywords,
+        "warnings": warnings,
+    }
+
+
+def interpret_novelty(score: float) -> str:
+    if score >= 70:
+        return "HIGH_NOVELTY"
+    if score >= 45:
+        return "MEDIUM_NOVELTY"
+    return "LOW_NOVELTY"
+
+
+def rank_archive(
+    profile: dict[str, Any],
+    archive: list[dict[str, Any]],
+    exclude_id: str | None = None,
+) -> list[dict[str, Any]]:
     candidate = " ".join([profile["title"], " ".join(profile["keywords"])])
     matches = [
         {
@@ -49,6 +78,7 @@ def rank_archive(profile: dict[str, Any], archive: list[dict[str, Any]]) -> list
             ),
         }
         for topic in archive
+        if topic["id"] != exclude_id
     ]
     return sorted(matches, key=lambda item: item["similarity"], reverse=True)[:3]
 

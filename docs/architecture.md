@@ -14,6 +14,7 @@ The prototype uses an **orchestrator + pipeline** pattern with explicit shared s
 ```mermaid
 flowchart TD
     U[Student / Coordinator CLI Request] --> O[Orchestrator]
+    E[(openalex_projects_enriched.csv)] -->|selected row inputs| U
 
     O -->|RUN_AGENT JSON| A1[Topic Intake Agent]
     A1 -->|topic_profile JSON| O
@@ -55,8 +56,9 @@ flowchart TD
 ## Typical Scenario Flow
 
 1. A student submits a topic, department, student name, and optional keywords.
+   Alternatively, `--record-id` loads a row from the enriched CSV. The four editable fields supply student, department, week, and completed milestones when filled.
 2. Topic Intake Agent validates the request and produces a normalized topic profile.
-3. Novelty Assessment Agent loads the CSV archive, excludes synthetic variants by default, and compares the topic against 160 OpenAlex records. It returns a novelty score, archive counts, and source links.
+3. Novelty Assessment Agent loads the original CSV archive, excludes synthetic variants by default, and compares the topic against 160 OpenAlex records. For a selected record it excludes the record's own ID. It returns a novelty score, archive counts, and source links.
 4. Duplication Control Agent classifies the duplication risk.
 5. Supervisor Matching Agent ranks suitable supervisors.
 6. Completion Cycle Monitor Agent builds a basic milestone plan.

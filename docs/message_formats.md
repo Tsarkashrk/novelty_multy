@@ -12,9 +12,12 @@
   "completed_milestones": ["M1"],
   "archive_source": "openalex",
   "archive_csv": null,
-  "include_synthetic": false
+  "include_synthetic": false,
+  "exclude_archive_id": null
 }
 ```
+
+For `--record-id OA0001`, the CLI reads the corresponding row of `openalex_projects_enriched.csv`, fills the request fields, and sets `exclude_archive_id` to `OA0001`. The novelty agent uses that ID only to avoid comparing the selected record with itself.
 
 ## Agent Message
 

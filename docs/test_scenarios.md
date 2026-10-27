@@ -27,4 +27,8 @@ Run all scenarios with `python3 -m unittest discover -s tests -v`. The 12 integr
 | CSV missing required columns | Structured `FAILED` report with missing-column error. |
 | Non-ASCII title tokenization | Kazakh letters are retained as tokens. |
 
+## Enriched CSV Checks
+
+`tests/test_enriched_csv.py` verifies that all 230 source rows and original fields are preserved, calculated supervisor and milestone previews are present, `--record-id` avoids self-matches and reproduces the preview for OA0001/OA0004, edited project inputs survive regeneration and feed the agents, the enriched file can also be used as an archive, and unknown IDs return a clear error.
+
 Representative inputs and outcomes are also available in `artifacts/assignment4_scenario_results.json`. The demo output and its 16 JSONL events are in `artifacts/assignment4_demo_output.json` and `artifacts/assignment4_demo_calls.jsonl`. Regenerate these with `python3 -m scripts.generate_assignment4_artifacts`.

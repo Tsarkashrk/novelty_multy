@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from src.agents.base import AgentMessage, BaseAgent
 from src.tools.data_loader import load_topic_archive
-from src.tools.domain_tools import rank_archive
+from src.tools.domain_tools import interpret_novelty, rank_archive
 
 
 class NoveltyAssessmentAgent(BaseAgent):
@@ -20,21 +20,17 @@ class NoveltyAssessmentAgent(BaseAgent):
             request.get("archive_csv"),
             request.get("include_synthetic", False),
         )
-        top_matches = tools.call("text_similarity_tool", rank_archive, profile, archive["topics"])
+        top_matches = tools.call(
+            "text_similarity_tool", rank_archive, profile, archive["topics"],
+            request.get("exclude_archive_id"),
+        )
         max_similarity = top_matches[0]["similarity"] if top_matches else 0.0
         novelty_score = round((1.0 - max_similarity) * 100, 1)
-
-        if novelty_score >= 70:
-            interpretation = "HIGH_NOVELTY"
-        elif novelty_score >= 45:
-            interpretation = "MEDIUM_NOVELTY"
-        else:
-            interpretation = "LOW_NOVELTY"
 
         return {
             "novelty_report": {
                 "novelty_score": novelty_score,
-                "interpretation": interpretation,
+                "interpretation": interpret_novelty(novelty_score),
                 "max_similarity": max_similarity,
                 "top_matches": top_matches,
                 "archive": {key: value for key, value in archive.items() if key != "topics"},

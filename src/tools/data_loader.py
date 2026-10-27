@@ -16,6 +16,20 @@ def load_json_dataset(name: str) -> Any:
         return json.load(file)
 
 
+def load_project_record(record_id: str, csv_path: str | None = None) -> dict[str, str]:
+    path = Path(csv_path).expanduser() if csv_path else DATA_DIR / "openalex_projects_enriched.csv"
+    with path.open("r", encoding="utf-8-sig", newline="") as file:
+        reader = csv.DictReader(file)
+        if not reader.fieldnames or not {"id", "title", "keywords"}.issubset(reader.fieldnames):
+            raise ValueError("Project CSV requires id, title, and keywords columns")
+        for row in reader:
+            if row["id"] == record_id:
+                if not row["title"].strip():
+                    raise ValueError(f"Project row {record_id} has no title")
+                return {key: value or "" for key, value in row.items()}
+    raise ValueError(f"Project record {record_id} was not found in {path.name}")
+
+
 def load_topic_archive(
     source: str = "openalex",
     csv_path: str | None = None,
